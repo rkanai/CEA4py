@@ -17,7 +17,7 @@ Win / Darwin のシステムで動くはず．
  - iacとfacで関数を分離
 
 ##実装済み関数
-##def cea_fac (OF, Pc, AR, CR, Pa = 0.101325):
+###def cea_fac (OF, Pc, AR, CR, Pa = 0.101325):
  - エンジンの諸値から燃焼時の理論値を得る
  - AR = Area Ratio (A_exit / A_throat)
  - CR = Contraction Ratio (A_chamber / A_throat)
@@ -25,16 +25,17 @@ Win / Darwin のシステムで動くはず．
  - 返り値はリスト [Pc, OF, isp, ivac, AR, cf]
  - 圧力の単位はMPaA，Ispの単位はsec，あとは無次元
  - fac(有限体積燃焼室)を仮定しているのでCRが引数に含まれる
+こういう画が出せる
 ![こういうのが作れる](ceatest_IspvsAR.png)
 
 ##実装予定
-##def cea_iac (OF, Pc, AR, Pa = 0.101325):
+###def cea_iac (OF, Pc, AR, Pa = 0.101325):
  - エンジンの諸値から燃焼時の理論値を得る
  - iac(無限体積燃焼室)を仮定しているのでCRは考慮しない
  - 他は cea_fac と同じ
 
 ##実装したい
-##def cea_optexp_iac (OF, Pc, Pa = 0.101325)
+###def cea_optexp_iac (OF, Pc, Pa = 0.101325)
  - あるO/FとPcにおける，最適膨張の開口比とその時の理論値を得る
  - 出口大気圧はデフォルト1atmを想定しているが，引数で変更可能
  - 返り値はリスト [isp, ivac, cf, aeat]
