@@ -25,6 +25,7 @@ Win / Darwin のシステムで動くはず．
  - 返り値はリスト [Pc, OF, isp, ivac, AR, cf]
  - 圧力の単位はMPaA，Ispの単位はsec，あとは無次元
  - fac(有限体積燃焼室)を仮定しているのでCRが引数に含まれる
+
 こういう画が出せる
 ![こういうのが作れる](ceatest_IspvsAR.png)
 
