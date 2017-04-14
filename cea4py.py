@@ -35,10 +35,6 @@ def cea_optexp_iac (OF, Pc, Pa = 0.101325)
 
 """
 
-import sys
-reload(sys)
-# デフォルトの文字コードを変更する．
-sys.setdefaultencoding('utf-8')
 import platform
 import numpy as np
 import os
@@ -64,19 +60,19 @@ fuel_temperature = 300
 
 # CEA を python の関数として扱う．fac仮定
 def cea_fac (OF, Pc, AR, CR, pa = 0.101325):
-    file_name = 'ceatemp' # 一時的に作られるファイル
+    file_name = b'ceatemp' # 一時的に作られるファイル
 
     # ---- .inpファイル作り ----
-    input_file = file_name + '.inp'
+    input_file = file_name + b'.inp'
     str = """problem    o/f=%.2f,
         rocket  equilibrium fac frozen  nfz=3
       p,bar = %.1f
       sup,ae/at= %.3f, ac/at = %.3f
 
-    react  
-      fuel=%s　wt=100 t,k=%d
+    react
+      fuel=%s wt=100 t,k=%d
       oxid=O2(L) wt=100  t,k=90.17
-    output  
+    output
         plot p ispfz ivacfz cffz
     end
     """ % (OF, Pc*10, AR, CR, fuel, fuel_temperature)
@@ -96,12 +92,12 @@ def cea_fac (OF, Pc, AR, CR, pa = 0.101325):
 # さっき作った.inp ファイルの，".inp"を除いたファイル名をCEAの標準入力に渡す
 # なぜ argv で渡せるようにしてくれなかったのか
     if 'Windows' == platform.system():
-        p.communicate(file_name + '\n') # Win環境ではコマンド末尾に¥nを付けないとバグる
+        p.communicate(file_name + b'\n') # Win環境ではコマンド末尾に¥nを付けないとバグる
     if 'Darwin' == platform.system():
         p.communicate(file_name)
 
     # ---- .pltファイル読み取り ----
-    output_file = file_name + '.plt'
+    output_file = file_name + b'.plt'
 
     with open(output_file, 'r') as f:
         reader = csv.reader(f, delimiter=' ')
@@ -170,14 +166,14 @@ if __name__ == '__main__': # テスト用．これ以降がなくても他ファ
         k = 0
         for AR in ar_array1:
             data = cea_fac(OF = 2, Pc = Pc, AR = AR, CR = 4) # 昔の人が見たら発狂しそうな記法 CRとO/Fは適当
-            print data
+            print (data)
             vsar_data_array[k] = np.array(data)
             k+=1
         g = 9.80665
         Isp = vsar_data_array[:,2] / g # 海面高度比推力 sec
         cf =  vsar_data_array[:,5]
         # ---- PLOT ----
-        plt.plot(ar_array1, cf, label='Pc=%.1f' % (Pc))
+        plt.plot(ar_array1, Isp, label='Pc=%.1f' % (Pc))
         save_array = np.vstack([save_array, vsar_data_array])
 
     # ---- CSVで結果を保存 ----
@@ -189,7 +185,7 @@ if __name__ == '__main__': # テスト用．これ以降がなくても他ファ
     plt.xlabel('AR')
     plt.ylabel('Isp (sec)')
     plt.grid()
-    plt.title('LOX/%s 100% frozen nfz=3' % (fuel))
+    plt.title('LOX/%s 100%% frozen nfz=3' % (fuel))
     plt.legend(loc='best', fontsize=12)
     plt.savefig('ceatest_IspvsAR.png')
     plt.close()
@@ -206,7 +202,7 @@ if __name__ == '__main__': # テスト用．これ以降がなくても他ファ
         k = 0
         for Pc in pc_array2:
             data = cea_fac(OF = 2, Pc = Pc, AR = AR, CR = 4) # 昔の人が見たら発狂しそうな記法 CRとO/Fは適当
-            print data
+            print (data)
             vspc_data_array[k] = np.array(data)
             k+=1
         g = 9.80665
@@ -224,7 +220,7 @@ if __name__ == '__main__': # テスト用．これ以降がなくても他ファ
     plt.xlabel('Pc')
     plt.ylabel('Isp (sec)')
     plt.grid()
-    plt.title('LOX/%s 100% frozen nfz=3' % (fuel))
+    plt.title('LOX/%s 100%% frozen nfz=3' % (fuel))
     plt.legend(loc='best', fontsize=12)
     plt.savefig('ceatest_IspvsPc.png')
     plt.close()
@@ -240,7 +236,7 @@ if __name__ == '__main__': # テスト用．これ以降がなくても他ファ
         k = 0
         for OF in of_array3:
             data = cea_fac(OF = OF, Pc = 5.0, AR = AR, CR = 4) # 昔の人が見たら発狂しそうな記法 CRとO/Fは適当
-            print data
+            print (data)
             vsof_data_array[k] = np.array(data)
             k+=1
         g = 9.80665
@@ -258,7 +254,7 @@ if __name__ == '__main__': # テスト用．これ以降がなくても他ファ
     plt.xlabel('O/F')
     plt.ylabel('Isp (sec)')
     plt.grid()
-    plt.title('LOX/%s 100% frozen nfz=3' % (fuel))
+    plt.title('LOX/%s 100%% frozen nfz=3' % (fuel))
     plt.legend(loc='best', fontsize=12)
     plt.savefig('ceatest_IspvsOF.png')
     plt.close()
@@ -276,7 +272,7 @@ if __name__ == '__main__': # テスト用．これ以降がなくても他ファ
         k = 0
         for pa in pa_array4:
             data = cea_fac(OF = 1.48, Pc = 1., AR = AR, CR = 4, pa = pa) # 昔の人が見たら発狂しそうな記法 CRとO/Fは適当
-            print data
+            print (data)
             vspa_data_array[k] = np.array(data)
             k+=1
         g = 9.80665
@@ -295,7 +291,7 @@ if __name__ == '__main__': # テスト用．これ以降がなくても他ファ
     plt.xlabel('pa')
     plt.ylabel('cf (-)')
     plt.grid()
-    plt.title('LOX/%s 100% frozen nfz=3' % (fuel))
+    plt.title('LOX/%s 100%% frozen nfz=3' % (fuel))
     plt.legend(loc='best', fontsize=12)
     plt.savefig('ceatest_Ispvspa.png')
     plt.close()
